@@ -1,0 +1,72 @@
+## This is log file create on : ____(Wed Jun 13 14:24:58 CDT 2018)____    
+## 
+.
+RUN_DIRECTORY   = /home/gyngn/data/0-PILOT_TESTS/example01-elk
+.
+CODE            = #srun  pw.x < scf.in > scf.out
+#srun  ph.x < ph.in > ph.out
+#srun  python pp.py < pp.in
+#srun  pw.x < scf_epw.in > scf_epw.out
+#srun  pw.x < nscf_epw.in > nscf_epw.out
+#srun  epw.x < epw_iso.in > epw_iso.out
+srun  epw.x < epw_iso_real.in > epw_iso_real.out
+srun  epw.x < epw_aniso.in > epw_aniso.out  
+.
+Submission_file = run_example
+.
+PROJECT TYPE    = Rerunning last two steps of EPW due to error in prvious run -- modified using instructions given by s. poce in the web: http://epwforum.uk/viewtopic.php?f=3&t=6
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+##### Submission file #####
+ 
+#!/bin/bash
+#--------------------------------------------------------------------------------
+#  SBATCH CONFIG
+#--------------------------------------------------------------------------------
+#SBATCH --job-name=epw-test        # name for the job
+#SBATCH --nodes=1                                                              # number of nodes
+#SBATCH --cpus-per-task=24            # number of cores
+#SBATCH --mem=119G                    # total memory
+#SBATCH --time 0-02:00                # time limit in the form days-hours:minutes
+#SBATCH --mail-user=gyngn@mail.missouri.edu  # email address for notifications
+#SBATCH --partition General           # max of 1 node and 2 hours; use `Lewis` for larger jobs
+#--------------------------------------------------------------------------------
+## Module Commands
+module load openmpi/openmpi-2.0.1
+module load quantum-espresso/quantum-espresso-6.2.1-openmpi-3.1.0-openblas
+module load python/python-2.7.14
+module load python/python-3.6.5
+
+module list
+######################################################################################################################################
+
+# Sequential run
+
+#srun  pw.x < scf.in > scf.out
+#srun  ph.x < ph.in > ph.out
+#srun  python pp.py < pp.in
+#srun  pw.x < scf_epw.in > scf_epw.out
+#srun  pw.x < nscf_epw.in > nscf_epw.out
+#srun  epw.x < epw_iso.in > epw_iso.out
+srun  epw.x < epw_iso_real.in > epw_iso_real.out
+srun  epw.x < epw_aniso.in > epw_aniso.out
+
+ 
+##### End-of-Submission file ######
+ 
