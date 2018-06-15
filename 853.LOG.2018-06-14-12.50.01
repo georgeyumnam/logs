@@ -9,7 +9,7 @@ Submission_file = script_mpi2
 .
 PROJECT TYPE    = 
 .
-.
+ERROR           = ### Starting at: Fri Jun 15 13:55:37 CDT 2018 ### Open MPI does not support recursive calls of mpiexec ### slurmstepd: error: *** JOB 5978905 ON lewis4-s2600tpr-hpc4-node249 CANCELLED AT 2018-06-15T15:55:36 DUE TO TIME LIMIT ***
 .
 .
 .
