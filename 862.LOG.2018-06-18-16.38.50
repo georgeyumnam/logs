@@ -1,0 +1,59 @@
+## This is log file create on : ____(Mon Jun 18 16:38:50 CDT 2018)____    
+## 
+.
+RUN_DIRECTORY   = /home/gyngn/data/z-codes/elk-5.2.11/tests/test-005
+.
+CODE            = srun $ELK > elk.out  
+.
+Submission_file = script_test.sh
+.
+PROJECT TYPE    = Elk test submission - @ /home/gyngn/data/z-codes/elk-5.2.11/tests/test-005
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+##### Submission file #####
+ 
+#!/bin/bash
+
+#--------------------------------------------------------------------------------
+#  SBATCH CONFIG
+#--------------------------------------------------------------------------------
+#SBATCH --job-name=elk-new        # name for the job
+#SBATCH --nodes=1                                                              # number of nodes
+#SBATCH --cpus-per-task=24            # number of cores
+#SBATCH --mem=119G                    # total memory
+#SBATCH --time 0-02:00                # time limit in the form days-hours:minutes
+#SBATCH --mail-user=gyngn@mail.missouri.edu  # email address for notifications
+#SBATCH --partition General           # max of 1 node and 2 hours; use Lewis for larger jobs
+#--------------------------------------------------------------------------------
+
+echo "### Starting at: $(date) ###"
+
+## Module Commands
+module load openmpi/openmpi-3.1.0
+module list
+
+
+## Run the QE script
+ELK='/home/gyngn/data/z-codes/elk-5.2.11/src/elk'
+srun $ELK > elk.out
+
+echo "### Ending at: $(date) ###"
+ 
+##### End-of-Submission file ######
+ 
