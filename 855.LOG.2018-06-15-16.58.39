@@ -58,3 +58,12 @@ echo "### Ending at: $(date) ###"
  
 ##### End-of-Submission file ######
  
+### Starting at: Sun Jun 17 10:32:56 CDT 2018 ###
+Currently Loaded Modulefiles:
+  1) mpich/mpich-3.2-intel
+  2) quantum-espresso/quantum-espresso-6.0
+  3) libxcb/libxcb-1.12
+  4) openmpi/openmpi-2.0.1
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** JOB 5993745 ON lewis4-r630-htc4-node337 CANCELLED AT 2018-06-17T12:33:13 DUE TO TIME LIMIT ***
+slurmstepd: error: *** STEP 5993745.0 ON lewis4-r630-htc4-node337 CANCELLED AT 2018-06-17T12:33:13 DUE TO TIME LIMIT ***

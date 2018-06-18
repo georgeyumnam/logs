@@ -9,6 +9,17 @@ Submission_file = script
 .
 PROJECT TYPE    = Testing same problem (../extra//home/gyngn/data/0-PILOT_TESTS/CoAsSe-rep-ex-02/extra/extra) with mpirun at General's partition specification
 .
+ERROR           =  ###ERROR found -- due to mpi structure -- input or command line fault.
+#--------------------------------------------------------------------------
+#Your job has requested more processes than the ppr for
+#this topology can support:
+#
+#  App: /home/gyngn/data/z-codes/elk-5.2.11/src/elk
+#  Number of procs:  24
+#  PPR: 1:node
+#
+#Please revise the conflict and try again.
+#--------------------------------------------------------------------------
 .
 .
 .
