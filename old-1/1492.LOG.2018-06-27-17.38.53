@@ -1,0 +1,213 @@
+## This is log file create on : ____(Wed Jun 27 17:38:53 CDT 2018)____    
+## 
+.
+RUN_DIRECTORY   = /home/gyngn/data/3-Bulk-CoAsSe/scf
+.
+CODE            = srun $EXCITING 
+srun $EXCITING  
+.
+Submission_file = script.sh
+.
+PROJECT TYPE    = PBE + BSE calculation in exciting code
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+##### Submission file #####
+ 
+#!/bin/bash
+
+#--------------------------------------------------------------------------------
+#  SBATCH CONFIG
+#--------------------------------------------------------------------------------
+#SBATCH --job-name=exciting       # name for the job
+#SBATCH --nodes=2                    # number of nodes
+#SBATCH --ntasks-per-node=28
+#SBATCH --ntasks=56
+#SBATCH --cpus-per-task=1 
+#SBATCH --mem=244G                    # total memory
+#SBATCH --time 0-20:00                # time limit in the form days-hours:minutes
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=gyngn@mail.missouri.edu  # email address for notifications
+#SBATCH --partition hpc4           # max of 1 node and 2 hours; use Lewis for larger jobs
+#--------------------------------------------------------------------------------
+
+echo "### Starting at: $(date) ###"
+
+## Module Commands
+module load openmpi/openmpi-3.1.0
+module list
+
+
+## Run the QE script
+EXCITING='/storage/hpc/data/gyngn/z-codes/exciting/bin/excitingmpi'
+
+## Ground state 
+mkdir GS
+cd GS
+cat > input.xml <<!
+<input>
+ 
+   <title>SCF CALCULATION</title>
+ 
+   <structure speciespath="/storage/hpc/data/gyngn/z-codes/exciting/species"> 
+ 
+      <crystal scale="5.755952">
+         <basevect>1.0 0.0        0.0</basevect>
+         <basevect>0.0 1.01461339 0.0</basevect>
+         <basevect>0.0 0.0        1.9954534</basevect>
+      </crystal>
+ 
+      <species speciesfile="As.xml" rmt='1.0' >
+         <atom coord="0.8664405809 0.3150512327 0.0649379482" /> 
+         <atom coord="0.6335598852 0.8150507170 0.0649379482" />
+         <atom coord="0.3664398464 0.3150512327 0.4350614418" />
+         <atom coord="0.1335591507 0.8150507170 0.4350614418" />
+         <atom coord="0.8664405809 0.1849482515 0.5649382088" />
+         <atom coord="0.6335598852 0.6849494481 0.5649382088" />
+         <atom coord="0.3664398464 0.1849482515 0.9350617024" />
+         <atom coord="0.1335591507 0.6849494481 0.9350617024" />
+      </species>
+      <species speciesfile="Co.xml" rmt='1.0' >
+         <atom coord="0.5024607969 0.1748832968 0.1274232886" /> 
+         <atom coord="0.9975382003 0.6748827811 0.1274232886" />
+         <atom coord="0.0024617997 0.1748832968 0.3725769720" />
+         <atom coord="0.4975389347 0.6748827811 0.3725769720" />
+         <atom coord="0.5024607969 0.3251178997 0.6274235492" />
+         <atom coord="0.9975382003 0.8251173840 0.6274235492" />
+         <atom coord="0.0024617997 0.3251178997 0.8725772326" />
+         <atom coord="0.4975389347 0.8251173840 0.8725772326" />
+      </species>
+      <species speciesfile="Se.xml" rmt='1.0' >
+         <atom coord="0.1222056848 0.0562733364 0.1802671033" />  
+         <atom coord="0.3777950497 0.5562728207 0.1802671033" />
+         <atom coord="0.6222046819 0.0562733364 0.3197322867" />
+         <atom coord="0.8777940468 0.5562728207 0.3197322867" />
+         <atom coord="0.1222056848 0.4437261478 0.6802673639" />
+         <atom coord="0.3777950497 0.9437273444 0.6802673639" />
+         <atom coord="0.6222046819 0.4437261478 0.8197325473" />
+         <atom coord="0.8777940468 0.9437273444 0.8197325473" /> 
+      </species>
+   </structure>
+ 
+   <groundstate 
+      xctype="GGA_PBE_SOL"
+      ngridk="12 12 12" 
+      rgkmax="8.0"
+      gmaxvr="18.0">
+   </groundstate>
+ 
+</input>
+!
+srun $EXCITING 
+cd ../
+
+## BSE
+mkdir BSE
+cd BSE
+cp ../GS/{STATE.OUT,EFERMI.OUT} .
+
+cat > input.xml <<!
+<input>
+ 
+   <title>SCF CALCULATION</title>
+ 
+   <structure speciespath="/storage/hpc/data/gyngn/z-codes/exciting/species"> 
+ 
+      <crystal scale="5.755952">
+         <basevect>1.0 0.0        0.0</basevect>
+         <basevect>0.0 1.01461339 0.0</basevect>
+         <basevect>0.0 0.0        1.9954534</basevect>
+      </crystal>
+ 
+      <species speciesfile="As.xml" rmt='1.0' >
+         <atom coord="0.8664405809 0.3150512327 0.0649379482" /> 
+         <atom coord="0.6335598852 0.8150507170 0.0649379482" />
+         <atom coord="0.3664398464 0.3150512327 0.4350614418" />
+         <atom coord="0.1335591507 0.8150507170 0.4350614418" />
+         <atom coord="0.8664405809 0.1849482515 0.5649382088" />
+         <atom coord="0.6335598852 0.6849494481 0.5649382088" />
+         <atom coord="0.3664398464 0.1849482515 0.9350617024" />
+         <atom coord="0.1335591507 0.6849494481 0.9350617024" />
+      </species>
+      <species speciesfile="Co.xml" rmt='1.0' >
+         <atom coord="0.5024607969 0.1748832968 0.1274232886" /> 
+         <atom coord="0.9975382003 0.6748827811 0.1274232886" />
+         <atom coord="0.0024617997 0.1748832968 0.3725769720" />
+         <atom coord="0.4975389347 0.6748827811 0.3725769720" />
+         <atom coord="0.5024607969 0.3251178997 0.6274235492" />
+         <atom coord="0.9975382003 0.8251173840 0.6274235492" />
+         <atom coord="0.0024617997 0.3251178997 0.8725772326" />
+         <atom coord="0.4975389347 0.8251173840 0.8725772326" />
+      </species>
+      <species speciesfile="Se.xml" rmt='1.0' >
+         <atom coord="0.1222056848 0.0562733364 0.1802671033" />  
+         <atom coord="0.3777950497 0.5562728207 0.1802671033" />
+         <atom coord="0.6222046819 0.0562733364 0.3197322867" />
+         <atom coord="0.8777940468 0.5562728207 0.3197322867" />
+         <atom coord="0.1222056848 0.4437261478 0.6802673639" />
+         <atom coord="0.3777950497 0.9437273444 0.6802673639" />
+         <atom coord="0.6222046819 0.4437261478 0.8197325473" />
+         <atom coord="0.8777940468 0.9437273444 0.8197325473" /> 
+      </species>
+   </structure>
+ 
+   <groundstate 
+      do = "skip">
+   </groundstate>
+
+   <xs 
+      xstype="BSE" 
+      ngridk="8 8 8" 
+      vkloff="0.04 0.02 0.03"
+      ngridq="8 8 8"
+      nempty="12"
+      gqmax="6.0"
+      broad="0.008"
+      scissor="0.3"
+      tevout="true" 
+      nosym="true" >
+ 
+      <energywindow 
+         intv="0.0 1.0" 
+         points="1200"/>
+ 
+      <screening 
+         screentype="full"
+         nempty="160"/>
+ 
+      <BSE 
+         bsetype="singlet"
+         nstlbse="1 8 1 8" 
+	 aresbse="false"/>
+ 
+      <qpointset>
+         <qpoint>0.0 0.0 0.0</qpoint>
+      </qpointset>
+ 
+   </xs>  
+</input>
+!
+
+srun $EXCITING
+cd ../
+
+echo "### Ending at: $(date) ###"
+
+ 
+##### End-of-Submission file ######
+ 

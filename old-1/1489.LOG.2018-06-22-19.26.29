@@ -1,0 +1,129 @@
+## This is log file create on : ____(Fri Jun 22 19:26:29 CDT 2018)____    
+## 
+.
+RUN_DIRECTORY   = /home/gyngn
+.
+CODE            =  #mpiexec -np \${SLURM_NTASKS} pw.x < Ca2Zn2CuP3.$a.in > Ca2Zn2CuP3.$a.out 
+.
+Submission_file = ss.sh
+.
+PROJECT TYPE    = This is just a dummy job - not submitted - for the purpose of testing updated logcreate script 
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+##### Submission file #####
+ 
+#/bin/bash
+
+
+for (( i=369; i<660; i++ )); do
+#
+a=`echo "scale=6; $i / 100.0" | bc`
+b=`echo "scale=6; (-1.0* $a) / 2.0" | bc`
+bb=`echo "scale=6; 0.8660254 * $a" | bc`
+c=`echo "scale=6; $a * (21.53438310 / 4.04433959)" | bc`
+#
+## self-consistent calculation
+#cat > Ca2Zn2CuP3.$a.in << EOF
+# &control
+#    prefix='Ca2Zn2CuP3_$a',
+#    pseudo_dir ='./',
+#    outdir='./',
+# /
+# &system
+#    ibrav=  0,
+#    nat=  16, ntyp= 4,
+#    ecutwfc = 50.0,
+# /
+# &electrons
+# /
+#CELL_PARAMETERS angstrom
+# $a 0.000000 0.000000
+#$b $bb 0.000000
+# 0.000000 0.000000 $c
+#ATOMIC_SPECIES
+# Ca 40.08  Ca.UPF
+# Zn 65.39  Zn.UPF
+# Cu 63.54  Cu.UPF
+# P  30.97  P.UPF
+#ATOMIC_POSITIONS
+#  Ca  0.000000  0.000000  0.658647
+#  Ca  0.000000  0.000000  0.341353
+#  Ca  0.000000  0.000000  0.158647
+#  Ca  0.000000  0.000000  0.841353
+#  Zn  0.333333  0.666667  0.957721
+#  Zn  0.666667  0.333333  0.457721
+#  Zn  0.666667  0.333333  0.042279
+#  Zn  0.333333  0.666667  0.542279
+#  Cu  0.666667  0.333333  0.750000
+#  Cu  0.333333  0.666667  0.250000
+#  P   0.666667  0.333333  0.575564
+#  P   0.333333  0.666667  0.424436
+#  P   0.333333  0.666667  0.750000
+#  P   0.666667  0.333333  0.924436
+#  P   0.333333  0.666667  0.075564
+#  P   0.666667  0.333333  0.250000
+#K_POINTS automatic
+#  8 8 4 1 1 1
+#EOF
+##
+#done
+#
+#cat > zz-scrip_run.$a <<!
+##!/bin/bash
+##--------------------------------------------------------------------------------
+##  SBATCH CONFIG
+##--------------------------------------------------------------------------------
+##SBATCH --job-name=QE_$a        # name for the job
+##SBATCH --nodes=2                                                              # number of nodes
+##SBATCH --ntasks-per-node=28
+##SBATCH --ntasks=56
+##SBATCH --cpus-per-task=1            # number of cores
+##SBATCH --mem=244G                    # total memory
+##SBATCH --time 0-12:00                # time limit in the form days-hours:minutes
+##SBATCH --mail-user=gyngn@mail.missouri.edu  # email address for notifications
+# 
+##SBATCH --partition hpc4           # max of 1 node and 2 hours; use for larger jobs
+##--------------------------------------------------------------------------------
+##
+#echo "#### Starting at \$(date) ####"
+#
+### Module Commands
+#module load openmpi/openmpi-2.0.1
+#module load quantum-espresso/quantum-espresso-6.0
+#module list
+# 
+## MPI flag for explicit safety
+#export PSM_RANKS_PER_CONTEXT=2
+# 
+### Run the QE script
+#mpiexec -np \${SLURM_NTASKS} pw.x < Ca2Zn2CuP3.$a.in > Ca2Zn2CuP3.$a.out
+#
+#echo "#### Ending at \$(date) ####"
+#
+#!
+#
+sbatch zz-scrip_run.$a
+#
+done
+#
+##grep -e 'lattice parameter' -e ! Ca2Zn2CuP3.$lat.out | \
+##      awk '/lattice/{alat=$(NF-1)}/!/{print alat, $(NF-1)}' >> si.etot_vs_alat
+ 
+##### End-of-Submission file ######
+ 

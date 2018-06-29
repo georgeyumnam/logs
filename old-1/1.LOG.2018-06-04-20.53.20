@@ -1,0 +1,77 @@
+## This is log file create on : ____(Mon Jun  4 20:53:20 CDT 2018)____    
+## 
+.
+RUN_DIRECTORY   = /home/gyngn/data/0-PILOT_TESTS/Matproj-htc/1-SCF
+.
+CODE            = srun pw.x < $i > $filename.out  
+.
+Submission_file = high-throughput-runner-sup-cond.sh
+.
+PROJECT TYPE    = High throughput calculation launched by this script for 419 cases (semiconductors and metals).
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+##### Submission file #####
+ 
+#/bin/bash
+
+
+for i in *.in; do
+
+filename=$(basename -- "$i")
+extension="${filename##*.}"
+filename="${filename%.*}"
+
+mkdir $filename
+mv $i $filename
+cd $filename
+
+cat > script-$filename.sh <<!
+#!/bin/bash
+#--------------------------------------------------------------------------------
+#  SBATCH CONFIG
+#--------------------------------------------------------------------------------
+#SBATCH --job-name=QE_HT_$filename          # name for the job
+#SBATCH --nodes=1                           # number of nodes
+#SBATCH --cpus-per-task=24          	    # number of cores
+#SBATCH --mem=119G           	            # total memory
+#SBATCH --time 0-12:00            	    # time limit in the form days-hours:minutes
+#SBATCH --mail-user=gyngn@mail.missouri.edu # email address for notifications
+#SBATCH --partition General          	    # max of 1 node and 2 hours; use Lewis for larger jobs
+#--------------------------------------------------------------------------------
+echo "### Starting at: \$(date) ###"
+## Module Commands
+module load openmpi/openmpi-2.0.1
+module load quantum-espresso/quantum-espresso-6.0
+module list
+## Run the QE script
+srun pw.x < $i > $filename.out
+echo "### Ending at: \$(date) ###"
+### Remove heavy wave-fuctions
+rm *wfc*
+!
+
+logcreate script-$filename.sh "High-throughput calculation for finding Superconductors - QE total energy calculation - case: $filename"
+sbatch script-$filename.sh
+
+cd ../
+
+done
+ 
+##### End-of-Submission file ######
+ 

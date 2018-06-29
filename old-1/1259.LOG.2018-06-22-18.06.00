@@ -1,0 +1,58 @@
+## This is log file create on : ____(Fri Jun 22 18:06:00 CDT 2018)____    
+## 
+.
+RUN_DIRECTORY   = /home/gyngn/scratch/2-SCF-semicond-finer/0128-1-semiconductor-mp-28994
+.
+CODE            = srun pw.x < 1-semiconductor-mp-28994.scf.in > 1-semiconductor-mp-28994.scf.out
+srun ph.x < 1-semiconductor-mp-28994.ph.in > 1-semiconductor-mp-28994.ph.out  
+.
+Submission_file = script-1-semiconductor-mp-28994.sh
+.
+PROJECT TYPE    = 1- High-throughput calculation for finding Superconductors - QE total energy pw and phonon calculation - case: 1-semiconductor-mp-28994
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+##### Submission file #####
+ 
+#!/bin/bash
+#--------------------------------------------------------------------------------
+#  SBATCH CONFIG
+#--------------------------------------------------------------------------------
+#SBATCH --job-name=t-0128          # name for the job
+#SBATCH --nodes=1                           # number of nodes
+#SBATCH --cpus-per-task=24          	    # number of cores
+#SBATCH --mem=119G           	            # total memory
+#SBATCH --time 1-00:00            	    # time limit in the form days-hours:minutes
+#SBATCH --mail-type=ALL                     # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=gyngn@mail.missouri.edu # email address for notifications
+#SBATCH --partition Lewis          	    # max of 1 node and 2 hours; use Lewis for larger jobs
+#--------------------------------------------------------------------------------
+echo "### Starting at: $(date) ###"
+## Module Commands
+module load openmpi/openmpi-3.1.0
+module load quantum-espresso/quantum-espresso-6.2.1-openmpi-3.1.0-openblas
+module list
+## Run the QE script
+srun pw.x < 1-semiconductor-mp-28994.scf.in > 1-semiconductor-mp-28994.scf.out
+srun ph.x < 1-semiconductor-mp-28994.ph.in > 1-semiconductor-mp-28994.ph.out
+echo "### Ending at: $(date) ###"
+### Remove heavy wave-fuctions
+rm *wfc*
+ 
+##### End-of-Submission file ######
+ 

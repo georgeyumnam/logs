@@ -1,0 +1,68 @@
+## This is log file create on : ____(Thu Jun 14 12:38:15 CDT 2018)____    
+## 
+.
+RUN_DIRECTORY   = /home/gyngn/data/z-codes/elk-5.2.11/tests/test-001
+.
+CODE            = srun $ELK > test.log  
+.
+Submission_file = script_srun
+.
+PROJECT TYPE    = ELK - test01
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+##### Submission file #####
+ 
+#!/bin/bash
+
+#--------------------------------------------------------------------------------
+#  SBATCH CONFIG
+#--------------------------------------------------------------------------------
+#SBATCH --job-name=launching-elk        # name for the job
+#SBATCH --nodes=1                                                              # number of nodes
+#SBATCH --cpus-per-task=24            # number of cores
+#SBATCH --mem=119G                    # total memory
+#SBATCH --time 0-02:00                # time limit in the form days-hours:minutes
+#SBATCH --mail-user=username@mail.missouri.edu  # email address for notifications
+#SBATCH --partition General           # max of 1 node and 2 hours; use `Lewis` for larger jobs
+#--------------------------------------------------------------------------------
+
+echo "### Starting at: $(date) ###"
+
+## Module Commands
+module load openmpi/openmpi-2.0.1
+module list
+
+ELK="/home/gyngn/data/z-codes/elk-5.2.11/src/elk"
+
+## Run the QE script
+srun $ELK > test.log
+NERROR=`grep -c Error test.log`
+if test $NERROR -gt 0
+then
+  echo " Failed! See test.log and output files"
+else
+  echo " Passed"
+  \rm -f *.OUT test.log fort.* gmon.out
+fi
+
+
+echo "### Ending at: $(date) ###"
+ 
+##### End-of-Submission file ######
+ 

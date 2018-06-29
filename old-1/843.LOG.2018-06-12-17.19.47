@@ -1,0 +1,114 @@
+## This is log file create on : ____(Tue Jun 12 17:19:47 CDT 2018)____    
+## 
+.
+RUN_DIRECTORY   = /home/gyngn/data/QE_samples/Tutorials/PHonon_and_ThermoPW/THERMO_PW
+.
+CODE            = srun $THERMO_PW_COMMAND < $NAME.scf.in > $NAME.scf.out  
+.
+Submission_file = run_example
+.
+PROJECT TYPE    = Trial run for ThermoPW code using tutorial samples of ICTP workshop on Si
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+##### Submission file #####
+ 
+#!/bin/bash
+#--------------------------------------------------------------------------------
+#  SBATCH CONFIG
+#--------------------------------------------------------------------------------
+#SBATCH --job-name=th_pw        # name for the job
+#SBATCH --nodes=1                                                              # number of nodes
+#SBATCH --cpus-per-task=24            # number of cores
+#SBATCH --mem=119G                    # total memory
+#SBATCH --time 0-02:00                # time limit in the form days-hours:minutes
+#SBATCH --mail-user=gyngn@mail.missouri.edu  # email address for notifications
+#SBATCH --partition General           # max of 1 node and 2 hours; use `Lewis` for larger jobs
+#--------------------------------------------------------------------------------
+## Module Commands
+module load openmpi/openmpi-2.0.1
+module load quantum-espresso/quantum-espresso-6.2.1-openmpi-3.1.0-openblas
+module list
+######################################################################################################################################
+
+echo $PWDIR
+THERMO_PW_COMMAND="thermo_pw.x"
+NAME="si"
+ECHO="echo"
+PSEUDODIR="/home/gyngn/data/z-codes/pslibrary/pbe/PSEUDOPOTENTIALS"
+
+
+mkdir results
+cd results
+
+#thermo_pw commands
+cat > thermo_control << EOF
+ &INPUT_THERMO
+  what='mur_lc_disp',
+  nq1_d=128, nq2_d=128, nq3_d=128,
+ /
+EOF
+ 
+# self-consistent calculation
+cat > $NAME.scf.in << EOF
+ &control
+    calculation='scf'
+    prefix='$NAME',
+    pseudo_dir = '$PSEUDODIR/',
+    outdir='./'
+ /
+ &system    
+    ibrav=  2, 
+    celldm(1) =10.20, 
+    nat=  2, 
+    ntyp= 1,
+    ecutwfc = 50.0
+ /
+ &electrons
+    conv_thr =  1.0d-10
+ /
+ATOMIC_SPECIES
+ Si  0.0  Si.pbe-n-kjpaw_psl.1.0.0.UPF
+ATOMIC_POSITIONS
+ Si 0.00 0.00 0.00 
+ Si 0.25 0.25 0.25 
+K_POINTS AUTOMATIC
+4 4 4 1 1 1
+EOF
+
+# phonons
+cat > ph_control << EOF
+phonons at Gamma
+ &inputph
+   prefix='$NAME',
+   ldisp=.true.
+   fildyn='si.dyn.xml',
+   nq1=4,
+   nq2=4,
+   nq3=4,
+   tr2_ph=1.0d-16,
+ /
+EOF
+
+$ECHO "  running the phonon calculation on a 4x4x4 mesh..."
+srun $THERMO_PW_COMMAND < $NAME.scf.in > $NAME.scf.out
+
+cd ..
+ 
+##### End-of-Submission file ######
+ 

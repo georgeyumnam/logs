@@ -1,0 +1,55 @@
+## This is log file create on : ____(Mon Jun  4 21:00:41 CDT 2018)____    
+## 
+.
+RUN_DIRECTORY   = /home/gyngn/data/0-PILOT_TESTS/Matproj-htc/1-SCF/1-semiconductor-mp-6960.scf
+.
+CODE            = srun pw.x < 1-semiconductor-mp-6960.scf.in > 1-semiconductor-mp-6960.scf.out  
+.
+Submission_file = script-1-semiconductor-mp-6960.scf.sh
+.
+PROJECT TYPE    = High-throughput calculation for finding Superconductors - QE total energy calculation - case: 1-semiconductor-mp-6960.scf
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+##### Submission file #####
+ 
+#!/bin/bash
+#--------------------------------------------------------------------------------
+#  SBATCH CONFIG
+#--------------------------------------------------------------------------------
+#SBATCH --job-name=QE_HT_1-semiconductor-mp-6960.scf          # name for the job
+#SBATCH --nodes=1                           # number of nodes
+#SBATCH --cpus-per-task=24          	    # number of cores
+#SBATCH --mem=119G           	            # total memory
+#SBATCH --time 0-12:00            	    # time limit in the form days-hours:minutes
+#SBATCH --mail-user=gyngn@mail.missouri.edu # email address for notifications
+#SBATCH --partition General          	    # max of 1 node and 2 hours; use Lewis for larger jobs
+#--------------------------------------------------------------------------------
+echo "### Starting at: $(date) ###"
+## Module Commands
+module load openmpi/openmpi-2.0.1
+module load quantum-espresso/quantum-espresso-6.0
+module list
+## Run the QE script
+srun pw.x < 1-semiconductor-mp-6960.scf.in > 1-semiconductor-mp-6960.scf.out
+echo "### Ending at: $(date) ###"
+### Remove heavy wave-fuctions
+rm *wfc*
+ 
+##### End-of-Submission file ######
+ 

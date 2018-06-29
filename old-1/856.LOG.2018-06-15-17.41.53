@@ -1,0 +1,73 @@
+## This is log file create on : ____(Fri Jun 15 17:41:53 CDT 2018)____    
+## 
+.
+RUN_DIRECTORY   = /home/gyngn/data/0-PILOT_TESTS/CoAsSe-rep-ex-02/extra/extra
+.
+CODE            =   mpirun -pernode -np ${SLURM_NTASKS} $ELK > elk.out
+.
+Submission_file = script
+.
+PROJECT TYPE    = Testing same problem (../extra//home/gyngn/data/0-PILOT_TESTS/CoAsSe-rep-ex-02/extra/extra) with mpirun at General's partition specification
+.
+ERROR           =  ###ERROR found -- due to mpi structure -- input or command line fault.
+#--------------------------------------------------------------------------
+#Your job has requested more processes than the ppr for
+#this topology can support:
+#
+#  App: /home/gyngn/data/z-codes/elk-5.2.11/src/elk
+#  Number of procs:  24
+#  PPR: 1:node
+#
+#Please revise the conflict and try again.
+#--------------------------------------------------------------------------
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+##### Submission file #####
+ 
+#!/bin/bash
+#--------------------------------------------------------------------------------
+#  SBATCH CONFIG
+#--------------------------------------------------------------------------------
+#SBATCH --job-name=elk3        # name for the job
+#SBATCH --nodes=1                                                              # number of nodes
+#SBATCH --ntasks-per-node=24
+#SBATCH --ntasks=24
+#SBATCH --cpus-per-task=1            # number of cores
+#SBATCH --mem=119G                    # total memory
+#SBATCH --time 0-02:00                # time limit in the form days-hours:minutes
+#SBATCH --mail-user=gyngn@mail.missouri.edu  # email address for notifications
+ 
+#SBATCH --partition General           # max of 1 node and 2 hours; use `Lewis` for larger jobs
+#--------------------------------------------------------------------------------
+ 
+export PSM_RANKS_PER_CONTEXT=2
+export OMP_NUM_THREADS=24
+
+## Module Commands
+module load openmpi/openmpi-2.0.1
+module list
+
+## Run the QE script
+ELK='/home/gyngn/data/z-codes/elk-5.2.11/src/elk'
+mpirun -pernode -np ${SLURM_NTASKS} $ELK > elk.out
+
+echo "### Ending at: $(date) ###"
+
+ 
+##### End-of-Submission file ######
+ 

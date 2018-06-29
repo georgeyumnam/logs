@@ -1,0 +1,61 @@
+## This is log file create on : ____(Mon Jun 25 12:14:37 CDT 2018)____    
+## 
+.
+RUN_DIRECTORY   = /home/gyngn/scratch/2-SCF-semicond-finer
+.
+CODE            =   
+.
+Submission_file = shshsh.sh
+.
+PROJECT TYPE    = Script to change the ph.in file to include a header line.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+##### Submission file #####
+ 
+#/bin/bash
+
+num=0
+
+for i in *-1-semiconductor-mp-* ; do
+cd $i 
+
+echo $PWD
+j=`ls *scf.in`
+echo $j
+
+filename=$(basename -- "$j")
+extension="${filename##*.}"
+filename="${filename%.*}"
+#
+filename="${filename%.*}"
+#
+#
+cat $filename.ph.in > temp 
+echo "title - $filename " > $filename.ph.in
+cat temp >> $filename.ph.in
+rm temp 
+
+sleep 1s
+
+cd ../
+
+done
+ 
+##### End-of-Submission file ######
+ 

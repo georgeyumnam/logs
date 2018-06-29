@@ -1,0 +1,277 @@
+## This is log file create on : ____(Thu Jun 28 11:04:57 CDT 2018)____    
+## 
+.
+RUN_DIRECTORY   = /home/gyngn/scratch/z-test-prior-22
+.
+CODE            = srun $ELK > elk.out
+srun $ELK > elk.out  
+.
+Submission_file = script.sh
+.
+PROJECT TYPE    = Resubmission with units in bohr radius format
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+##### Submission file #####
+ 
+#!/bin/bash
+
+#--------------------------------------------------------------------------------
+#  SBATCH CONFIG
+#--------------------------------------------------------------------------------
+#SBATCH --job-name=elk-eli-4        # name for the job
+#SBATCH --nodes=1                                                              # number of nodes
+#SBATCH --cpus-per-task=24            # number of cores
+#SBATCH --mem=244G                    # total memory
+#SBATCH --time 1-20:00                # time limit in the form days-hours:minutes
+#SBATCH --mail-type=ALL               # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=gyngn@mail.missouri.edu  # email address for notifications
+#SBATCH --partition Lewis           # max of 1 node and 2 hours; use `Lewis` for larger jobs
+#--------------------------------------------------------------------------------
+
+echo "### Starting at: $(date) ###"
+
+export OMP_NUM_THREADS=24
+
+## Module Commands
+module load openmpi/openmpi-3.1.0
+module list
+
+
+#cp ../Co.in ../Se.in ../As.in .
+
+ELK='/home/gyngn/data/z-codes/elk-5.2.11/src/elk'
+
+cat > elk.in <<!
+tasks
+  0       : ground state run
+  205     : compute the dynamical matrices
+
+ngridq
+ 4  4  4
+
+rgkmax
+ 8.0
+
+mixtype
+ 3
+
+xctype
+ 3
+
+demaxbnd
+ 3.0
+
+spinpol
+ .true.
+
+ngridk
+  8  8  8
+
+swidth
+  0.01
+
+stype
+  1
+
+nrmtscf
+  8
+
+plot1d
+  10  1500
+  0.0  0.0  0.0   ! Gamma
+  0.5  0.0  0.0   ! X
+  0.5  0.5  0.0   ! S
+  0.0  0.5  0.0   ! Y
+  0.0  0.0  0.0   ! Gamma
+  0.0  0.0  0.5   ! Z
+  0.5  0.0  0.5   ! U
+  0.5  0.5  0.5   ! R
+  0.0  0.5  0.5   ! T
+  0.0  0.0  0.5   ! Z
+
+sppath
+ './'
+
+scale
+ 1.8897261246
+
+avec
+ 5.773649 0.000000 0.000000
+ 0.000000 5.861159 0.000000
+ 0.000000 0.000000 11.530869
+
+atoms
+   3                                    : nspecies
+'Co.in'                                 : spfname
+   8                                    : natoms; atposl below
+  0.002516 0.175264 0.372774 
+  0.502516 0.324736 0.627226 
+  0.997484 0.675264 0.127226 
+  0.497484 0.824736 0.872774 
+  0.997484 0.824736 0.627226 
+  0.497484 0.675264 0.372774 
+  0.002516 0.324736 0.872774 
+  0.502516 0.175264 0.127226 
+'As.in'
+   8
+  0.366347 0.315489 0.435109 
+  0.866347 0.184511 0.564891 
+  0.633653 0.815489 0.064891 
+  0.133653 0.684511 0.935109 
+  0.633653 0.684511 0.564891 
+  0.133653 0.815489 0.435109 
+  0.366347 0.184511 0.935109 
+  0.866347 0.315489 0.064891 
+'Se.in'
+   8
+  0.121960 0.057245 0.180279 
+  0.621960 0.442755 0.819721 
+  0.878040 0.557245 0.319721 
+  0.378040 0.942755 0.680279 
+  0.878040 0.942755 0.819721 
+  0.378040 0.557245 0.180279 
+  0.121960 0.442755 0.680279 
+  0.621960 0.057245 0.319721 
+!
+
+srun $ELK > elk.out
+
+mv elk.in elk.in2
+mv elk.out elk.out2
+cp INFO.out INFO.out2
+
+
+cat > elk.in << !
+! This example generates a phonon dispersion for the superconductor MgB2 using
+! density functional perturbation theory (DFPT). The superconducting critical
+! temperature is also computed using McMillan's formula and by solving the
+! Eliashberg equations.
+
+
+! number of phonon q-points
+ngridq
+  8  8  8
+
+rgkmax
+ 8.0
+
+mixtype
+ 3
+
+xctype
+ 3
+
+demaxbnd
+ 3.0
+
+spinpol
+ .true.
+
+stype
+ 1
+
+! larger smearing width required for stable phonon dispersion
+swidth
+  0.01
+
+stype
+  1
+
+! increase the number of muffin-tin points (for accurate gradients)
+nrmtscf
+  8
+
+! after all the dynamical matrix DYN---.OUT files have been calculated then
+! uncomment the following lines and run again
+
+ngridk
+  12 12 12
+
+tasks
+  1       : ground state with larger k-point set
+  210     : phonon DOS
+  220     : plot the phonon dispersion
+  240     : electron-phonon matrix elements
+  245     : phonon line-widths
+  250     : Eliashberg function, alpha^2F
+
+plot1d
+  10  1500
+  0.0  0.0  0.0   ! Gamma
+  0.5  0.0  0.0   ! X
+  0.5  0.5  0.0   ! S
+  0.0  0.5  0.0   ! Y
+  0.0  0.0  0.0   ! Gamma
+  0.0  0.0  0.5   ! Z
+  0.5  0.0  0.5   ! U
+  0.5  0.5  0.5   ! R
+  0.0  0.5  0.5   ! T
+  0.0  0.0  0.5   ! Z
+
+sppath
+ './'
+
+scale
+ 1.8897261246
+
+avec
+ 5.773649 0.000000 0.000000
+ 0.000000 5.861159 0.000000
+ 0.000000 0.000000 11.530869
+
+atoms
+   3                                    : nspecies
+'Co.in'                                 : spfname
+   8                                    : natoms; atposl below
+  0.002516 0.175264 0.372774 
+  0.502516 0.324736 0.627226 
+  0.997484 0.675264 0.127226 
+  0.497484 0.824736 0.872774 
+  0.997484 0.824736 0.627226 
+  0.497484 0.675264 0.372774 
+  0.002516 0.324736 0.872774 
+  0.502516 0.175264 0.127226 
+'As.in'
+   8
+  0.366347 0.315489 0.435109 
+  0.866347 0.184511 0.564891 
+  0.633653 0.815489 0.064891 
+  0.133653 0.684511 0.935109 
+  0.633653 0.684511 0.564891 
+  0.133653 0.815489 0.435109 
+  0.366347 0.184511 0.935109 
+  0.866347 0.315489 0.064891 
+'Se.in'
+   8
+  0.121960 0.057245 0.180279 
+  0.621960 0.442755 0.819721 
+  0.878040 0.557245 0.319721 
+  0.378040 0.942755 0.680279 
+  0.878040 0.942755 0.819721 
+  0.378040 0.557245 0.180279 
+  0.121960 0.442755 0.680279 
+  0.621960 0.057245 0.319721 
+!
+
+srun $ELK > elk.out
+
+echo "### Ending at: $(date) ###"
+ 
+##### End-of-Submission file ######
+ 

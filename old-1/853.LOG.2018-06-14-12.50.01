@@ -1,0 +1,62 @@
+## This is log file create on : ____(Thu Jun 14 12:50:01 CDT 2018)____    
+## 
+.
+RUN_DIRECTORY   = /home/gyngn/data/z-codes/elk-5.2.11/tests/test-001
+.
+CODE            =  mpiexec -np ${SLURM_NTASKS} ./elk > elk.out  
+.
+Submission_file = script_mpi2
+.
+PROJECT TYPE    = 
+.
+ERROR           = ### Starting at: Fri Jun 15 13:55:37 CDT 2018 ### Open MPI does not support recursive calls of mpiexec ### slurmstepd: error: *** JOB 5978905 ON lewis4-s2600tpr-hpc4-node249 CANCELLED AT 2018-06-15T15:55:36 DUE TO TIME LIMIT ***
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+##### Submission file #####
+ 
+#!/bin/bash
+#--------------------------------------------------------------------------------
+#  SBATCH CONFIG
+#--------------------------------------------------------------------------------
+#SBATCH --job-name=elk        # name for the job
+#SBATCH --nodes=1                                                              # number of nodes
+#SBATCH --ntasks-per-node=28
+#SBATCH --ntasks=28
+#SBATCH --cpus-per-task=1            # number of cores
+#SBATCH --mem=244G                    # total memory
+#SBATCH --time 0-02:00                # time limit in the form days-hours:minutes
+#SBATCH --mail-user=gyngn@mail.missouri.edu  # email address for notifications
+ 
+#SBATCH --partition Lewis           # max of 1 node and 2 hours; use `Lewis` for larger jobs
+#--------------------------------------------------------------------------------
+ 
+echo "### Starting at: $(date) ###"
+ 
+## Module Commands
+module load openmpi/openmpi-2.0.1
+module list
+ 
+# MPI flag for explicit safety
+export PSM_RANKS_PER_CONTEXT=2
+ 
+## Run the QE script
+mpiexec -np ${SLURM_NTASKS} ./elk > elk.out 
+ 
+echo "### Ending at: $(date) ###"
+ 
+##### End-of-Submission file ######
+ 

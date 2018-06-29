@@ -1,0 +1,73 @@
+## This is log file create on : ____(Tue Jun 19 18:58:27 CDT 2018)____    
+## 
+.
+RUN_DIRECTORY   = /storage/hpc/scratch/gyngn/ngridk_10-rgkmax_05
+.
+CODE            = srun $EXCITING   
+.
+Submission_file = script.sh
+.
+PROJECT TYPE    = Though this job was run at the location provided above, it will be moved to its original directory after cleaning big files. The directory will be at /home/gyngn/data/3-Bulk-CoAsSe/2-convergence/workdir/ngridk_10-rgkmax_05 ...
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+##### Submission file #####
+ 
+#!/bin/bash
+
+#--------------------------------------------------------------------------------
+#  SBATCH CONFIG
+#--------------------------------------------------------------------------------
+#SBATCH --job-name=rgkmax8        # name for the job
+#SBATCH --nodes=1                                                              # number of nodes
+#SBATCH --cpus-per-task=1            # number of cores
+#SBATCH --mem=119G                    # total memory
+#SBATCH --time 0-16:00                # time limit in the form days-hours:minutes
+#SBATCH --mail-user=gyngn@mail.missouri.edu  # email address for notifications
+#SBATCH --partition Lewis           # max of 1 node and 2 hours; use Lewis for larger jobs
+#--------------------------------------------------------------------------------
+
+echo "### Starting at: $(date) ###"
+
+## Module Commands
+module load openmpi/openmpi-3.1.0
+module list
+
+
+## Run the QE script
+EXCITING='/storage/hpc/data/gyngn/z-codes/exciting/bin/excitingser'
+srun $EXCITING 
+
+mv TOTENERGY.OUT .TOTENERGY
+rm *OUT*
+mv .TOTENERGY TOTENERGY.OUT
+
+cd ../
+
+mv $i /home/gyngn/data/3-Bulk-CoAsSe/2-convergence/workdir
+cd /home/gyngn/data/3-Bulk-CoAsSe/2-convergence/workdir/$i 
+
+sss='*LOG*'
+
+ln -s /home/gyngn/data/zzz-log/$sss $sss
+
+echo "### Ending at: $(date) ###"
+
+ 
+##### End-of-Submission file ######
+ 
